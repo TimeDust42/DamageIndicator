@@ -18,7 +18,7 @@ public class IndicatorConfig {
     public IndicatorConfig(FileConfiguration config) {
         this.selfWorkingEnabled = config.getBoolean("self-working", true);
         this.defaultTemplate = config.getString("templates.default", "<red>-<damage> ❤</red>");
-        this.critTemplate = config.getString("templates.crit",    "<gold>✦ -<damage> ❤</gold>");
+        this.critTemplate = config.getString("templates.crit",    "<gold>-<damage> ❤</gold>");
         this.riseTicks = config.getLong("animation.rise-ticks",   22L);
         this.fadeTicks = config.getLong("animation.fade-ticks",    7L);
         this.riseHeight = (float) config.getDouble("animation.rise-height", 0.7);
