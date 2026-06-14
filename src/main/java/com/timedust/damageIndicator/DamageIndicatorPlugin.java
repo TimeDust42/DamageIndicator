@@ -1,41 +1,79 @@
 package com.timedust.damageIndicator;
 
 import com.timedust.damageIndicator.api.DamageIndicatorAPI;
+import com.timedust.damageIndicator.api.IndicatorBuilder;
+import com.timedust.damageIndicator.commands.ReloadCommand;
 import com.timedust.damageIndicator.config.IndicatorConfig;
-import com.timedust.damageIndicator.listeners.DamageListener;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class DamageIndicatorPlugin extends JavaPlugin {
+import java.util.Objects;
 
-    private static DamageIndicatorPlugin instance;
+public class DamageIndicatorPlugin extends JavaPlugin implements DamageIndicatorAPI {
+
     private IndicatorConfig indicatorConfig;
+    private boolean apiEnabled = true;
 
     @Override
     public void onEnable() {
-        instance = this;
-
-        DamageIndicatorAPI.init(this);
+        Bukkit.getServicesManager().register(
+                DamageIndicatorAPI.class,
+                this,
+                this,
+                ServicePriority.Normal
+        );
 
         saveDefaultConfig();
-        indicatorConfig = new IndicatorConfig(getConfig());
+
+        reloadPluginConfig();
+
+        Objects.requireNonNull(getCommand("damageindicator")).setExecutor(new ReloadCommand(this));
 
         if (indicatorConfig.isSelfWorkingEnabled()) {
-            getServer().getPluginManager().registerEvents(
-                    new DamageListener(indicatorConfig), this
-            );
             getLogger().info("DamageIndicator запущен в самостоятельном режиме.");
         } else {
             getLogger().info("DamageIndicator запущен в режиме библиотеки.");
         }
     }
 
-    @Override
-    public void onDisable() {
-        instance = null;
+    public void reloadPluginConfig() {
+        this.reloadConfig();
+
+        this.indicatorConfig = new IndicatorConfig(this.getConfig());
     }
 
-    public static DamageIndicatorPlugin getInstance() {
-        return instance;
+    @Override
+    public @Nullable IndicatorBuilder builder(@NotNull LivingEntity victim, double damage) {
+        if (!apiEnabled) return null;
+        return new IndicatorBuilder(this, victim, damage);
+    }
+
+    @Override
+    public @Nullable IndicatorBuilder builder(@NotNull Player damager, @NotNull LivingEntity victim, double damage) {
+        if (!apiEnabled) return null;
+        return new IndicatorBuilder(this, damager, victim, damage);
+    }
+
+    @Override
+    public @Nullable IndicatorBuilder builder(@NotNull Location location, double damage) {
+        if (!apiEnabled) return null;
+        return new IndicatorBuilder(this, location, damage);
+    }
+
+    @Override
+    public void setApiEnabled(boolean enabled) {
+        this.apiEnabled = enabled;
+    }
+
+    @Override
+    public boolean isApiEnabled() {
+        return this.apiEnabled;
     }
 
     public IndicatorConfig getIndicatorConfig() {

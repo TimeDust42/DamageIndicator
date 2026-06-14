@@ -3,4 +3,20 @@ version: '1.0'
 main: com.timedust.damageIndicator.DamageIndicatorPlugin
 api-version: '1.19'
 
+description: Damage Indicator Plugin
+author: TimeDust42
+
+permissions:
+  damageindicator.reload:
+    description: "Reload plugin config"
+    default: op
+
+commands:
+  damageindicator:
+    description: "Reload plugin config"
+    aliases: [di, dindicator]
+    permission: damageindicator.reload
+    permission-message: "You do not have permission to use this command"
+
+
 softdepend: []

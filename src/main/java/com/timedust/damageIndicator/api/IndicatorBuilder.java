@@ -9,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Transformation;
@@ -29,6 +30,7 @@ public class IndicatorBuilder {
     private long fadeDelay   = 4L;   // задержка перед стартом движения
     private float riseHeight = 0.8f; // высота подъёма в блоках (не слишком высоко)
 
+    private Player damager = null;
     private boolean isCrit = false;
     private Color backgroundColor = Color.fromARGB(160, 20, 20, 20);
     private Display.Billboard billboard = Display.Billboard.CENTER;
@@ -52,6 +54,17 @@ public class IndicatorBuilder {
         this.baseLocation = loc.add(offsetX, offsetY, offsetZ);
     }
 
+    public IndicatorBuilder(JavaPlugin plugin, Player damager, LivingEntity victim, double damage) {
+        this.plugin = plugin;
+        this.damager = damager;
+        this.damage = damage;
+
+        Location loc = victim.getLocation().add(0, victim.getHeight() + 0.1, 0);
+        double offsetX = (Math.random() - 0.5) * 0.7;
+        double offsetZ = (Math.random() - 0.5) * 0.7;
+        double offsetY = Math.random() * 0.3;
+        this.baseLocation = loc.add(offsetX, offsetY, offsetZ);
+    }
 
     public IndicatorBuilder defaultAttackTemplate(String miniMessageFormat) {
         this.defaultAttackTemplate = miniMessageFormat;
@@ -130,7 +143,14 @@ public class IndicatorBuilder {
                     new Vector3f(startScale, startScale, startScale),
                     new Quaternionf()
             ));
+            if (damager != null) {
+                entity.setVisibleByDefault(false);
+            }
         });
+
+        if (damager != null) {
+            damager.showEntity(plugin, indicator);
+        }
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!indicator.isValid()) return;

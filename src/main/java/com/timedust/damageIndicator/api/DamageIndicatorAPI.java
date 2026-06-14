@@ -2,40 +2,39 @@ package com.timedust.damageIndicator.api;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class DamageIndicatorAPI {
-
-    private static JavaPlugin hostPlugin;
-    private static boolean enabled = true;
-
-    private DamageIndicatorAPI() {}
-
-    public static void init(JavaPlugin plugin) {
-        hostPlugin = plugin;
-    }
-
-    public static boolean isInitialized() {
-        return hostPlugin != null;
-    }
-    public static void setEnabled(boolean value) {
-        enabled = value;
-    }
+public interface DamageIndicatorAPI {
 
     /**
-     * Создать индикатор у сущности.
-     * Возвращает null если API не инициализировано или отключено.
+     * Создает билдер для индикатора урона на основе сущности-жертвы.
+     * Индикатор будет виден всем игрокам.
      */
-    public static IndicatorBuilder builder(LivingEntity victim, double damage) {
-        if (!enabled || hostPlugin == null) return null;
-        return new IndicatorBuilder(hostPlugin, victim, damage);
-    }
+    @Nullable
+    IndicatorBuilder builder(@NotNull LivingEntity victim, double damage);
 
     /**
-     * Создать индикатор на конкретной локации.
+     * Создает билдер для индикатора урона, привязанного к атакующему игроку.
+     * Индикатор будет скрыт от всех, кроме этого игрока.
      */
-    public static IndicatorBuilder builder(Location location, double damage) {
-        if (!enabled || hostPlugin == null) return null;
-        return new IndicatorBuilder(hostPlugin, location, damage);
-    }
+    @Nullable
+    IndicatorBuilder builder(@NotNull Player damager, @NotNull LivingEntity victim, double damage);
+
+    /**
+     * Создает билдер для индикатора урона на определенной локации.
+     */
+    @Nullable
+    IndicatorBuilder builder(@NotNull Location location, double damage);
+
+    /**
+     * Включить или выключить отображение индикаторов через API.
+     */
+    void setApiEnabled(boolean enabled);
+
+    /**
+     * Проверить, включено ли API в данный момент.
+     */
+    boolean isApiEnabled();
 }
