@@ -19,7 +19,7 @@ public class DamageIndicatorPlugin extends JavaPlugin {
         saveDefaultConfig();
         indicatorConfig = new IndicatorConfig(getConfig());
 
-        if (indicatorConfig.isStandaloneListenerEnabled()) {
+        if (indicatorConfig.isSelfWorkingEnabled()) {
             getServer().getPluginManager().registerEvents(
                     new DamageListener(indicatorConfig), this
             );

@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class IndicatorConfig {
 
-    private final boolean standaloneListenerEnabled;
+    private final boolean selfWorkingEnabled;
     private final String defaultTemplate;
     private final String critTemplate;
     private final long riseTicks;
@@ -16,7 +16,7 @@ public class IndicatorConfig {
     private final Color backgroundColor;
 
     public IndicatorConfig(FileConfiguration config) {
-        this.standaloneListenerEnabled = config.getBoolean("standalone-listener", true);
+        this.selfWorkingEnabled = config.getBoolean("self-working", true);
         this.defaultTemplate = config.getString("templates.default", "<red>-<damage> ❤</red>");
         this.critTemplate = config.getString("templates.crit",    "<gold>✦ -<damage> ❤</gold>");
         this.riseTicks = config.getLong("animation.rise-ticks",   22L);
@@ -33,7 +33,7 @@ public class IndicatorConfig {
     }
 
     // getters
-    public boolean isStandaloneListenerEnabled() { return standaloneListenerEnabled; }
+    public boolean isSelfWorkingEnabled() { return selfWorkingEnabled; }
     public String getDefaultTemplate() { return defaultTemplate; }
     public String getCritTemplate() { return critTemplate; }
     public long getRiseTicks() { return riseTicks; }

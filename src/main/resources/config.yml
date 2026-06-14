@@ -1,6 +1,6 @@
 # true — плагин сам слушает урон (самостоятельный режим)
 # false — только API, другие плагины вызывают его сами
-standalone-listener: true
+self-working: true
 
 templates:
   default: "<red>-<damage> ❤</red>"
