@@ -1,0 +1,6 @@
+name: DamageIndicator
+version: '1.0'
+main: com.timedust.damageIndicator.DamageIndicatorPlugin
+api-version: '1.19'
+
+softdepend: []

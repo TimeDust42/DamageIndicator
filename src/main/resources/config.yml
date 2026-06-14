@@ -1,0 +1,21 @@
+# true — плагин сам слушает урон (самостоятельный режим)
+# false — только API, другие плагины вызывают его сами
+standalone-listener: true
+
+templates:
+  default: "<red>-<damage> ❤</red>"
+  crit: "<gold>-<damage> ❤</gold>"
+
+animation:
+  rise-ticks: 22
+  fade-ticks: 7
+  rise-height: 0.7
+
+display:
+  scale: 1.0
+  shadowed: false
+  background-color:
+    a: 160
+    r: 20
+    g: 20
+    b: 20
